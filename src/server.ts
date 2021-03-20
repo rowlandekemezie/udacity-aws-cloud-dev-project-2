@@ -32,13 +32,18 @@ import fs from 'fs';
   /**************************************************************************** */
 
   app.get('/filteredimage', async(req, res) => {
-    if(!req.query.image_url) {
-      return res.send('You must provide image url')
+    try {
+      if(!req.query.image_url) {
+        return res.send('You must provide image url')
+      }
+      const filteredImage = await filterImageFromURL(req.query.image_url)
+      const files = fs.readdirSync(__dirname + '/util/tmp').map(i => join(__dirname, 'util/tmp', i))
+      setTimeout(() => deleteLocalFiles(files), 1000);
+      return res.status(200).sendFile(filteredImage);
+    } catch (error) {
+      console.log(error)
+      return res.status(422).send('Something went wrong. Try again!')
     }
-    const filteredImage = await filterImageFromURL(req.query.image_url)
-    const files = fs.readdirSync(__dirname + 'util/tmp').map(i => join(__dirname, 'util/tmp', i))
-    setTimeout(() => deleteLocalFiles(files), 1000);
-    return res.sendFile(filteredImage);
   })
 
   //! END @TODO1

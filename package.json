@@ -33,6 +33,6 @@
     "rimraf": "^3.0.2"
   },
   "engines": {
-    "node": "12.X"
+    "node": "12"
   }
 }
